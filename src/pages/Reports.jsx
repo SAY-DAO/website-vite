@@ -332,7 +332,7 @@ export default function ReportPage() {
                   </Grid>
                   <Grid item xs={12} md={3}>
                     <ReportCart1
-                      data={seasonComparison.pays.data}
+                      data={[]}
                       title="مددکاران"
                       season={season}
                     />
