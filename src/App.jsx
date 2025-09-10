@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import Loader from './components/Loader';
+import './i18n';
 
 const Home = lazy(() => import('./pages/Home'));
 const Reports = lazy(() => import('./pages/Reports'));

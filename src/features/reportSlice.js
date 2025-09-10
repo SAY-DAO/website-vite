@@ -71,11 +71,13 @@ export const fetchSeasonComparison = createAsyncThunk(
   },
 );
 
-export const fetchLogs = createAsyncThunk(
-  'report/fetchLogs',
+export const fetchCheckpoints = createAsyncThunk(
+  'report/checkPoints',
   async (_, thunkAPI) => {
     try {
-      const resp = await api.get('/api/dao/logs', { signal: thunkAPI.signal });
+      const resp = await api.get('/api/dao/analytic/public/checkpoints', {
+        signal: thunkAPI.signal,
+      });
       return resp.data;
     } catch (e) {
       return thunkAPI.rejectWithValue(normalizeAxiosError(e));
@@ -96,11 +98,11 @@ const initialState = {
   },
   season: null,
   transactions: [],
-  logs: [],
+  checkpoints: [],
   loadingSummary: false,
   loadingSeasonComparison: false,
   loadingTransactions: false,
-  loadingLogs: false,
+  loadingCheckPoints: false,
   error: null,
 };
 
@@ -160,17 +162,17 @@ const reportSlice = createSlice({
         state.error = action.payload ?? action.error?.message;
       })
 
-      /* logs */
-      .addCase(fetchLogs.pending, (state) => {
-        state.loadingLogs = true;
+      /* checkpoints */
+      .addCase(fetchCheckpoints.pending, (state) => {
+        state.loadingCheckPoints = true;
         state.error = null;
       })
-      .addCase(fetchLogs.fulfilled, (state, action) => {
-        state.loadingLogs = false;
-        state.logs = action.payload || [];
+      .addCase(fetchCheckpoints.fulfilled, (state, action) => {
+        state.loadingCheckPoints = false;
+        state.checkpoints = action.payload || [];
       })
-      .addCase(fetchLogs.rejected, (state, action) => {
-        state.loadingLogs = false;
+      .addCase(fetchCheckpoints.rejected, (state, action) => {
+        state.loadingCheckPoints = false;
         state.error = action.payload ?? action.error?.message;
       });
   },

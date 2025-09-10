@@ -12,24 +12,20 @@ import {
   useTheme,
   Divider,
   Skeleton,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
   Autocomplete,
 } from '@mui/material';
 import {
   fetchSummary,
   fetchSeasonComparison,
   fetchTransactions,
-  fetchLogs,
+  fetchCheckpoints,
 } from '../features/reportSlice';
 import ReportTable from '../components/report/ReportTable';
 import ReportCart1 from '../components/report/ReportCart1';
 import NeedFrequencyChart from '../components/report/NeedFrequencyChart';
 import NeedsMultiPayer from '../components/report/NeedsMultiPayer';
 import ReportNgos from '../components/report/ReportNgos';
+import CheckpointLog from '../components/report/CheckpointLog';
 
 function getYearsDescending(fromYear = 2019) {
   const currentYear = new Date().getFullYear();
@@ -48,10 +44,10 @@ export default function ReportPage() {
 
   const summary = useSelector((s) => s.report.summary || {});
   const seasonComparison = useSelector((s) => s.report.season || null);
-  const logs = useSelector((s) => s.report.logs || []);
+  const checkpoints = useSelector((s) => s.report.checkpoints || []);
 
   const loadingSummary = useSelector((s) => s.report.loadingSummary);
-  const loadingLogs = useSelector((s) => s.report.loadingLogs);
+  const loadingCheckPoints = useSelector((s) => s.report.loadingCheckPoints);
 
   const [inputValue, setInputValue] = useState('');
 
@@ -68,7 +64,7 @@ export default function ReportPage() {
   useEffect(() => {
     dispatch(fetchSummary());
     dispatch(fetchSeasonComparison({ season, includeRates: false }));
-    dispatch(fetchLogs());
+    dispatch(fetchCheckpoints());
     // load recent transactions with no range
     dispatch(
       fetchTransactions({
@@ -222,43 +218,34 @@ export default function ReportPage() {
       </Grid>
 
       <Grid container justifyContent="center" spacing={2}>
-        {/* LEFT: 1/3 - Logs */}
-        <Grid item xs={12} md={3}>
+        {/* LEFT: 1/3 - CheckPoints */}
+        <Grid item xs={12} md={4}>
           <Card sx={{ minHeight: '92vh' }}>
             <CardContent>
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Typography variant="h6">لاگ‌ها</Typography>
-              </Stack>
-
-              {loadingLogs ? (
+              {loadingCheckPoints ? (
                 <Stack spacing={1}>
+                  <Skeleton variant="rectangular" height={40} />
+                  <Skeleton variant="rectangular" height={40} />
+                  <Skeleton variant="rectangular" height={40} />
+                  <Skeleton variant="rectangular" height={40} />
+                  <Skeleton variant="rectangular" height={40} />
+                  <Skeleton variant="rectangular" height={40} />
+                  <Skeleton variant="rectangular" height={40} />
+                  <Skeleton variant="rectangular" height={40} />
+                  <Skeleton variant="rectangular" height={40} />
+                  <Skeleton variant="rectangular" height={40} />
                   <Skeleton variant="rectangular" height={40} />
                   <Skeleton variant="rectangular" height={40} />
                 </Stack>
               ) : (
-                <List sx={{ maxHeight: '60vh', overflow: 'auto' }}>
-                  {(logs || []).map((l) => (
-                    <React.Fragment key={l.id}>
-                      <ListItem alignItems="flex-start">
-                        <ListItemAvatar>
-                          <Avatar>{String(l.id)}</Avatar>
-                        </ListItemAvatar>
-                        <ListItemText primary={l.message} secondary={l.time} />
-                      </ListItem>
-                    </React.Fragment>
-                  ))}
-                </List>
+                <CheckpointLog />
               )}
             </CardContent>
           </Card>
         </Grid>
 
         {/* RIGHT: 2/3 - Transactions table + charts */}
-        <Grid container spacing={2} item xs={12} md={9}>
+        <Grid container spacing={2} item xs={12} md={8}>
           {/* Transactions table card */}
           <Grid item xs={12}>
             <Card>
@@ -331,11 +318,7 @@ export default function ReportPage() {
                     />
                   </Grid>
                   <Grid item xs={12} md={3}>
-                    <ReportCart1
-                      data={[]}
-                      title="مددکاران"
-                      season={season}
-                    />
+                    <ReportCart1 data={[]} title="مددکاران" season={season} />
                   </Grid>
                 </Grid>
               </CardContent>
